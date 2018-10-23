@@ -1,0 +1,312 @@
+.coolrunner_select_shop{
+	clear: both;
+	display: inline-block;
+	margin-top:25px;
+	margin-bottom:25px;
+}
+
+.coolrunner_select_shop span input{
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.coolrunner_select_shop span #coolrunner_zip_code_search{
+	text-align: right;
+	width: 95px;
+}
+
+.coolrunner_select_shop #coolrunner_search_droppoints{
+	display: block;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+.coolrunner_select_shop #coolrunner-search-results{
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+.wp-admin select {
+    padding: 2px;
+    line-height: 28px;
+    height: auto;
+}
+
+#coolrunner-dao-droppoint-wrapper{
+	display: none;
+}
+
+#map_wrapper {
+    height: 400px;
+}
+
+#map_canvas {
+    height: 100%;
+}
+
+.coolrunner-dao-detail{
+	display: none;
+}
+
+/*google map*/
+
+#coolrunner-dao-droppoint-wrapper {
+    max-width: 1000px;
+    width: 85%;
+}
+
+#coolrunner-dao-droppoint-header {
+    position: relative;
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    height: 50px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+
+#coolrunner-dao-droppoint-header h2 {
+    font-size: 18px;
+    line-height: normal;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+#coolrunner-dao-droppoint-result {
+    position: relative;
+    float: left;
+    height: auto;
+	width: 100%;
+	font-size: 12px;
+}
+
+#coolrunner-dao-droppoint-result #map_wrapper {
+    float: left;
+    max-width: 500px;
+    width: 50%;
+    height: 100%;
+    display: block;
+    position: relative;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-search-results{
+    float: left;
+    max-height: 500px;
+    max-width: 250px;
+    width: 25%;
+    padding: 20px;
+    border-right: 1px solid #E5E5E5;
+    border-left: 1px solid #E5E5E5;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+
+#coolrunner-dao-droppoint-wrapper ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-search-results li {
+    float: left;
+    width: 175px;
+    display: block;
+    overflow: visible;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-search-results li input.coolrunner-dao-radio {
+    float: left;
+    display: block;
+    width: 13px;
+    height: 13px;
+    margin: 0px;
+    margin-top: 2px;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-search-results li .coolrunner-dao-address {
+    float: right;
+    width: 150px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-search-results li .coolrunner-dao-address label h4 {
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container {
+    position: absolute;
+    max-height: 500px;
+    max-width: 250px;
+    width: 25%;
+    padding: 20px 25px;
+    text-align: left;
+    overflow-y: scroll;
+    right: 0;
+    box-sizing: border-box;
+}
+
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container .coolrunner-dao-opening-header {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #0a263c;
+    font-weight: 400;
+    font-style: normal;
+    text-transform: uppercase;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container span {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container ul {
+    border: 1px solid #E5E5E5;
+    margin-top: 4px;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container ul li {
+    padding: 4px 8px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container ul .coolrunner-dao-weekday {
+    display: inline-block;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container ul .coolrunner-dao-openinghours {
+    display: inline;
+    float: right;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container .coolrunner-dao-openinghours span {
+    font-weight: normal;
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container .coolrunner-dao-openinghours span.from::after {
+    display: inline;
+    content: " - ";
+}
+
+#coolrunner-dao-droppoint-result #coolrunner-dao-opening-container .coolrunner-dao-content {
+    margin-bottom: 20px;
+}
+
+#coolrunner-dao-droppoint-wrapper #coolrunner-dao-droppoint-buttons-set {
+    padding: 15px;
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+    border-top: 1px solid #E5E5E5;
+	height: 72px;
+	text-align: right;
+}
+
+button#coolrunner-dao-close-droppoint-selector-save{
+	margin: 0;
+    padding: 0;
+    font: helvetica, arial, sans-serif;
+    overflow: visible;
+    -webkit-appearance: button;
+    cursor: pointer;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 120px;
+    font-size: 13px;
+    font-weight: 400;
+    vertical-align: middle;
+    border-radius: 4px;
+	padding: 10px 0;
+	
+}
+
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .modal {
+    display: block;
+}
+
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+    opacity: 0.80;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 80);
+    filter: alpha(opacity = 80)
+};
+
+
+    @media (max-width: 767px) {
+
+ 
+    }
+  @media (min-width: 768px) and (max-width: 991px) {
+
+  }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    #coolrunner-dao-droppoint-result #map_wrapper{
+        display: none;
+    }
+    #coolrunner-dao-droppoint-result #coolrunner-search-results{
+        max-width: 50%;
+        width: 50%;
+    }
+    #coolrunner-dao-droppoint-result #coolrunner-dao-opening-container{
+        max-width: 50%;
+        width: 50%;
+    }
+
+    #coolrunner-dao-droppoint-result #coolrunner-search-results li {
+        width: 100%;
+
+    }
+
+    #coolrunner-dao-droppoint-result #coolrunner-search-results li .coolrunner-dao-address {
+        width: 90%;
+    }
+
+  }
+
+  @media (max-width: 1199px) {
+    #coolrunner-dao-droppoint-result #map_wrapper{
+        display: none;
+    }
+    #coolrunner-dao-droppoint-result #coolrunner-search-results{
+        max-width: 50%;
+        width: 50%;
+    }
+    #coolrunner-dao-droppoint-result #coolrunner-dao-opening-container{
+        max-width: 50%;
+        width: 50%;
+    }
+
+    #coolrunner-dao-droppoint-result #coolrunner-search-results li {
+        width: 100%;
+
+    }
+
+    #coolrunner-dao-droppoint-result #coolrunner-search-results li .coolrunner-dao-address {
+        width: 90%;
+    }
+
+  }
+
+  @media (min-width: 1200px) {
+
+  }
+
