@@ -226,6 +226,13 @@ function CR_add_coolrunner_droppoint_checkout_script(){
 	<script type="text/javascript" >
 
 jQuery( document ).ready(function() {
+    jQuery(document).on('keydown','#coolrunner_zip_code_search', function(e) {
+        if(e.keyCode === 13) {
+            e.preventDefault();
+            jQuery('#coolrunner_search_droppoints').click();
+            return false;
+        }
+    });
 	if (jQuery('#ship-to-different-address-checkbox').is(':checked')){
 		jQuery( document ).on('keyup','#shipping_postcode',function() {					
 			var zipcode=jQuery(this).val();	
