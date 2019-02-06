@@ -75,7 +75,7 @@ jQuery(function ($) {
                     val = $('[name="shipping_method[0]"]').val()
                 }
 
-                if(val !== undefined) {
+                if (val !== undefined) {
                     if (val.indexOf('coolrunner_') === -1 || val.indexOf('droppoint') === -1) {
                         droppoint_container.hide();
                     } else {
@@ -129,34 +129,6 @@ jQuery(function ($) {
         chosen_zip_code.attr('placeholder', origin_zip_code);
     })();
 });
-
-/*
-jQuery( document ).on('click' , '[name="droppoint-address"]', function() {
-    
-        var droppoint_id=jQuery(this).attr("id");
- //       alert(droppoint_id);
-
-        jQuery.ajax({
-            url : post_search.ajax_url,
-            type : 'post',
-            data : {
-                action : 'post_droppoint',
-                droppoint_id : droppoint_id
-                  },
-            success : function( response ) {
-                jQuery('#coolrunner-dao-opening-container').show();
-                jQuery('#coolrunner-dao-opening-container').html( response );
-            },
-            fail: function(){
-                jQuery('#coolrunner-dao-opening-container').html("Noget gik galt, kontakt webshop ejeren")
-            }
-        });
-   
-});
-*/
-
-jQuery(function ($) {
-})
 
 
 

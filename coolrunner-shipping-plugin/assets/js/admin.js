@@ -91,36 +91,27 @@ jQuery(function ($) {
         })()
     }
 
-    if ($('body').hasClass('woocommerce_page_wc-settings')) {
-        var email_preview = $('<iframe id="coolrunner-email-preview" style="width: 100%; background: white;"><html style="background: white;"><head></head><body style="padding: 0; margin: 0;"></body></html></iframe>');
+    if ($('body').hasClass('toplevel_page_coolrunner-options')) {
+        var email_preview = $('<iframe id="coolrunner_tracking_email_preview"><head></head><body style="padding: 0; margin: 0;"></body></html></iframe>');
 
-        email_preview.insertAfter('#coolrunner_settings_tracking_email');
+        email_preview.insertAfter('#coolrunner_tracking_email');
 
-        $('#coolrunner_settings_tracking_email').on('keypress input change', function () {
+        $('#coolrunner_tracking_email').on('keypress input change', function () {
             email_preview[0].contentWindow.document.getElementsByTagName('body')[0].innerHTML = $(this).val();
         }).trigger('change');
 
-        $('#coolrunner_settings_send_email').on('change click keypress', function () {
-            var row = $('#coolrunner_settings_tracking_email').parents('tr');
-            if ($(this).is(':checked')) {
+        $('#coolrunner_automatic_tracking').on('change click keypress', function () {
+            console.log($(this).val());
+            let row = $('#coolrunner_tracking_email').parents('tr');
+            if ($(this).val() == 1) {
                 // row.fadeIn();
-                row.find('*').stop().slideDown();
+                row.show();
+                row.prev().show();
             } else {
                 // row.fadeOut();
-                row.find('*').stop().slideUp();
+                row.hide();
+                row.prev().hide();
             }
-        }).is(':checked') || $('#coolrunner_settings_tracking_email').parents('tr').find('*').hide();
-
-        $('#coolrunner_settings_auto_send_to_pcn').on('change click keypress', function () {
-            var row = $('#coolrunner_settings_auto_send_to_pcn_when').parents('tr');
-            if ($(this).is(':checked')) {
-                // row.fadeIn();
-                row.find('*').stop().slideDown();
-            } else {
-                // row.fadeOut();
-                row.find('*').stop().slideUp();
-            }
-        }).is(':checked') || $('#coolrunner_settings_auto_send_to_pcn_when').parents('tr').find('*').hide();
+        }).trigger('click')
     }
-
 });
