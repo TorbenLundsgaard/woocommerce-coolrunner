@@ -71,7 +71,11 @@ add_action( 'wp_ajax_coolrunner_delete_shipment', function () {
 } );
 
 add_action( 'add_meta_boxes', function () {
-	global $post;
+	global $post, $post_type;
+	if ( $post_type !== 'shop_order' ) {
+		return;
+	}
+
 	$order = wc_get_order( $post->ID );
 
 	$is_coolrunner = false;
@@ -146,6 +150,8 @@ function crship_get_metabox_content( $id = null ) {
 			$weight += ( $prod->get_weight() * $item->get_quantity() );
 		}
 	}
+
+	$weight *= get_option( 'coolrunner_product_weight', 1000 );
 
 	$primary = [ 'name' => '', 'height' => '', 'width' => '', 'length' => '', 'weight' => '' ];
 	?>

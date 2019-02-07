@@ -56,10 +56,6 @@ if ( ! empty( $_POST ) ) {
                         <input required id="coolrunner_integration_token" type="text" name="coolrunner_integration_token" value="<?php echo get_option( 'coolrunner_integration_token' ) ?>" placeholder="lasdkhgfo745lkjsdt7o">
                     </td>
                 </tr>
-                </tbody>
-            </table>
-            <table class="form-table">
-                <tbody>
                 <tr>
                     <th>
                         <label for="coolrunner_label_format">
@@ -72,6 +68,21 @@ if ( ! empty( $_POST ) ) {
                                 <option value="<?php echo $label_format ?>" <?php echo get_option( 'coolrunner_label_format', 'A4' ) == $label_format ? 'selected' : '' ?>><?php echo $label_format ?></option>
 							<?php endforeach; ?>
                         </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="coolrunner_product_weight">
+			                <?php echo __( 'Label Format', 'coolrunner-shipping-plugin' ) ?>
+                        </label>
+                    </th>
+                    <td>
+                        <select id="coolrunner_product_weight" name="coolrunner_product_weight">
+			                <?php foreach ( [ 1 => 'Gram', 1000 => 'Kilogram', 1000000 => 'Ton' ] as $multiplier => $weight_unit ) : ?>
+                                <option value="<?php echo $multiplier ?>" <?php echo get_option( 'coolrunner_product_weight', 1000 ) == $multiplier ? 'selected' : '' ?>><?php echo $weight_unit ?></option>
+			                <?php endforeach; ?>
+                        </select>
+                        <p class="description"><?php echo __( 'Weight unit used by WooCommerce (used for automatic conversion of weight for shipments)', 'coolrunner-shipping-plugin' ) ?></p>
                     </td>
                 </tr>
                 <tr>
