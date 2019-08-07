@@ -627,7 +627,7 @@ function coolrunner_create_shipment( $post_id = null ) {
 
 			$response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $recieve_responsecode = false, $json = true );
 
-			if ( $response->result->status == 'ok' ) {
+            if ($response->result->status == 'ok' || $response->status == 'ok') {
 				update_post_meta( $order_id, '_coolrunner_package_number', $response->result->package_number );
 				update_post_meta( $order_id, '_coolrunner_pdf_link', $response->result->pdf_link );
 				update_post_meta( $order_id, '_coolrunner_price_incl_tax', $response->result->price_incl_tax );
@@ -642,7 +642,7 @@ function coolrunner_create_shipment( $post_id = null ) {
 			}
 
 
-			$created = isset( $response ) && $response->result->status === 'ok';
+            $created = isset($response) && ($response->result->status === 'ok' || $response->status == 'ok');
 		}
 
 		$content = crship_get_metabox_content( $order_id );
