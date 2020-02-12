@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoolRunner for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-12 11:44+0000\n"
+"POT-Creation-Date: 2020-02-12 14:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -36,197 +36,203 @@ msgid "Searching for droppoints!"
 msgstr ""
 
 #. Author of the plugin
-#: includes/functions.php:91 includes/functions.php:924
+#: includes/functions.php:128 includes/functions.php:1296
 msgid "CoolRunner"
 msgstr ""
 
-#: includes/functions.php:98
+#: includes/functions.php:135
 msgid "Tracking History"
 msgstr ""
 
-#: includes/functions.php:130
+#: includes/functions.php:167
 msgid "No tracking data available for order no."
 msgstr ""
 
-#: includes/functions.php:162
+#: includes/functions.php:200
 msgid "Servicepoint"
 msgstr ""
 
-#: includes/functions.php:174
+#: includes/functions.php:212 includes/functions.php:395
 msgid "Shipping Method"
 msgstr ""
 
-#: includes/functions.php:178
+#: includes/functions.php:216 includes/functions.php:399
 msgid "Size"
 msgstr ""
 
-#: includes/functions.php:182
+#: includes/functions.php:220 includes/functions.php:403
 msgid "Package Number"
 msgstr ""
 
-#: includes/functions.php:188
+#: includes/functions.php:226 includes/functions.php:409
 msgid "Cost incl. tax"
 msgstr ""
 
-#: includes/functions.php:194
+#: includes/functions.php:232 includes/functions.php:415
 msgid "Cost excl. tax"
 msgstr ""
 
-#: includes/functions.php:201
+#: includes/functions.php:239
 msgid "Tracking Sent"
 msgstr ""
 
-#: includes/functions.php:204
+#: includes/functions.php:242
 msgid "Send Tracking Email"
 msgstr ""
 
-#: includes/functions.php:206
+#: includes/functions.php:244 includes/functions.php:420
 msgid "Delete Shipment"
 msgstr ""
 
-#: includes/functions.php:208 includes/functions.php:941
+#: includes/functions.php:246 includes/functions.php:421
+#: includes/functions.php:1313
 msgid "Download Label"
 msgstr ""
 
-#: includes/functions.php:210 includes/functions.php:943
+#: includes/functions.php:248 includes/functions.php:422
+#: includes/functions.php:1315
 msgid "Show Label"
 msgstr ""
 
-#: includes/functions.php:211
+#: includes/functions.php:249
 msgid "Print Label"
 msgstr ""
 
-#: includes/functions.php:233
+#: includes/functions.php:271
 msgid "Tracking email sent"
 msgstr ""
 
-#: includes/functions.php:239
+#: includes/functions.php:277
 msgid "Failed to send tracking email"
 msgstr ""
 
-#: includes/functions.php:246
+#: includes/functions.php:284 includes/functions.php:430
 msgid ""
 "Do you wish to remove the shipment from this order?\\nCannot be undone!"
 "\\nDoes not cancel the shipment!"
 msgstr ""
 
-#: includes/functions.php:255
+#: includes/functions.php:293 includes/functions.php:439
 msgid "Shipment removed"
 msgstr ""
 
-#: includes/functions.php:260
+#: includes/functions.php:298 includes/functions.php:444
 msgid "Failed to remove shipment"
 msgstr ""
 
-#: includes/functions.php:278
-msgid "Box Size"
-msgstr ""
-
-#: includes/functions.php:294 pages/box-sizes.php:79
+#: includes/functions.php:317 includes/functions.php:477 pages/box-sizes.php:79
 msgid "Height (cm)"
 msgstr ""
 
-#: includes/functions.php:298 pages/box-sizes.php:80
+#: includes/functions.php:321 includes/functions.php:481 pages/box-sizes.php:80
 msgid "Width (cm)"
 msgstr ""
 
-#: includes/functions.php:302 pages/box-sizes.php:81
+#: includes/functions.php:325 includes/functions.php:485 pages/box-sizes.php:81
 msgid "Length (cm)"
 msgstr ""
 
-#: includes/functions.php:306
+#: includes/functions.php:329 includes/functions.php:489
 msgid "Weight (g)"
 msgstr ""
 
-#: includes/functions.php:310
+#: includes/functions.php:333 includes/functions.php:493
 msgid "Create Shipment"
 msgstr ""
 
-#: includes/functions.php:360
+#: includes/functions.php:371 includes/functions.php:543
 msgid "Shipment Created"
 msgstr ""
 
-#: includes/functions.php:362
+#: includes/functions.php:373 includes/functions.php:545
 msgid "Shipment Exists"
 msgstr ""
 
-#: includes/functions.php:395
+#: includes/functions.php:392
+msgid "Package number 2:"
+msgstr ""
+
+#: includes/functions.php:461
+msgid "Box Size"
+msgstr ""
+
+#: includes/functions.php:578
 msgid "Store phone and/or email not set"
 msgstr ""
 
-#: includes/functions.php:396
+#: includes/functions.php:579
 #, php-format
 msgid "Please set this in <a href=\"%s\">WooCommerce Settings</a>"
 msgstr ""
 
-#: includes/functions.php:416
+#: includes/functions.php:599
 msgid "CoolRunner could not retrieve information about your account."
 msgstr ""
 
-#: includes/functions.php:417
+#: includes/functions.php:600
 msgid "Please check your username and/or token:"
 msgstr ""
 
-#: includes/functions.php:450
+#: includes/functions.php:633
 msgid "Choose package shop"
 msgstr ""
 
-#: includes/functions.php:451
+#: includes/functions.php:634
 msgid "Choose where you want your package to be dropped off"
 msgstr ""
 
-#: includes/functions.php:454
+#: includes/functions.php:637
 msgid "Input Zip Code"
 msgstr ""
 
-#: includes/functions.php:462
+#: includes/functions.php:645
 msgid "Search for package shop"
 msgstr ""
 
-#: includes/functions.php:535
+#: includes/functions.php:718
 msgid "Distance"
 msgstr ""
 
-#: includes/functions.php:652
+#: includes/functions.php:835 includes/functions.php:913
 #, php-format
 msgid "Created shipment: %s"
 msgstr ""
 
-#: includes/functions.php:687
+#: includes/functions.php:948 includes/functions.php:967
 #, php-format
 msgid "Removed shipment: %s"
 msgstr ""
 
-#: includes/functions.php:746
+#: includes/functions.php:1025
 #, php-format
 msgid "Tracking information sent to: %s"
 msgstr ""
 
-#: includes/functions.php:788
+#: includes/functions.php:1067
 msgid "Phone"
 msgstr ""
 
-#: includes/functions.php:789
+#: includes/functions.php:1068
 msgid "The phone number for your business location."
 msgstr ""
 
-#: includes/functions.php:796
+#: includes/functions.php:1075
 msgid "Email"
 msgstr ""
 
-#: includes/functions.php:797
+#: includes/functions.php:1076
 msgid "The email address for your business location."
 msgstr ""
 
-#: includes/functions.php:971
+#: includes/functions.php:1343
 msgid "Please select your package shop."
 msgstr ""
 
-#: includes/functions.php:1032
+#: includes/functions.php:1404
 msgid "Unable to create or re-send email for order: "
 msgstr ""
 
-#: includes/functions.php:1078
+#: includes/functions.php:1450
 msgid "Sent all marked orders"
 msgstr ""
 

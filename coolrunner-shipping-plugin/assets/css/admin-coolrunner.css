@@ -38,6 +38,18 @@
 
 }
 
+button#coolrunner_delete_shipment {
+    background-color: #dc3545 !important;
+    border: 1px solid #dc3545 !important;
+    color: white !important;
+}
+
+button#coolrunner_delete_shipment_second {
+    background-color: #dc3545 !important;
+    border: 1px solid #dc3545 !important;
+    color: white !important;
+}
+
 .coolrunner .text-right {
     text-align : right;
 }
