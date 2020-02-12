@@ -1066,5 +1066,54 @@ function crship_custom_js_admin_footer() {
 	<?php
 }
 
+/*
+ * Add bulk action to handle orders
+ * Added by Kevin Hansen 12/02/2020
+ * */
 
+// Adding bulk action to list
+add_filter( 'bulk_actions-edit-shop_order', 'bulk_action_sent_selected_orders', 20, 1 );
+function bulk_action_sent_selected_orders( $actions ) {
+    $actions['sent_all_orders'] = __( 'Sent all marked orders', 'coolrunner-shipping-plugin' );
+    return $actions;
+}
+
+// Make the action from selected orders
+add_filter( 'handle_bulk_actions-edit-shop_order', 'sent_handle_bulk_action_edit_shop_order', 10, 3 );
+function sent_handle_bulk_action_edit_shop_order( $redirect_to, $action, $post_ids ) {
+    if ( $action !== 'sent_all_orders' )
+        return $redirect_to; // Exit
+
+    $processed_ids = array();
+
+    foreach ( $post_ids as $post_id ) {
+        $order = wc_get_order( $post_id );
+        $order_data = $order->get_data();
+
+        coolrunner_create_shipment($post_id);
+
+        $processed_ids[] = $post_id;
+    }
+
+    return $redirect_to = add_query_arg( array(
+        'download_marked_orders' => '1',
+        'processed_count' => count( $processed_ids ),
+        'processed_ids' => implode( ',', $processed_ids ),
+    ), $redirect_to );
+}
+
+// The results notice from bulk action on orders
+add_action( 'admin_notices', 'sent_bulk_action_admin_notice' );
+function sent_bulk_action_admin_notice() {
+    if ( empty( $_REQUEST['download_marked_orders'] ) ) return; // Exit
+
+    $count = intval( $_REQUEST['processed_count'] );
+
+    printf( '<div id="message" class="updated fade"><p>' .
+        _n( 'Processed %s Order for printing.',
+            'Processed %s Orders for printing.',
+            $count,
+            'download_marked_orders'
+        ) . '</p></div>', $count );
+}
 
