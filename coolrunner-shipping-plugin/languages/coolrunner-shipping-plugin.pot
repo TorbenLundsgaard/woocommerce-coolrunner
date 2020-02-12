@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoolRunner for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-06 11:18+0000\n"
+"POT-Creation-Date: 2020-02-12 11:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -23,199 +23,211 @@ msgstr ""
 msgid "You can get WooCommerce here:"
 msgstr ""
 
-#: woocommerce_coolrunner.php:56
+#: woocommerce_coolrunner.php:57
 msgid "Settings"
 msgstr ""
 
-#: woocommerce_coolrunner.php:57
+#: woocommerce_coolrunner.php:58
 msgid "Read more about CoolRunner"
 msgstr ""
 
-#: woocommerce_coolrunner.php:73
+#: woocommerce_coolrunner.php:74
 msgid "Searching for droppoints!"
 msgstr ""
 
 #. Author of the plugin
-#: includes/functions.php:87 includes/functions.php:897
+#: includes/functions.php:91 includes/functions.php:924
 msgid "CoolRunner"
 msgstr ""
 
-#: includes/functions.php:94
+#: includes/functions.php:98
 msgid "Tracking History"
 msgstr ""
 
-#: includes/functions.php:126
+#: includes/functions.php:130
 msgid "No tracking data available for order no."
 msgstr ""
 
-#: includes/functions.php:156
+#: includes/functions.php:162
 msgid "Servicepoint"
 msgstr ""
 
-#: includes/functions.php:168
+#: includes/functions.php:174
 msgid "Shipping Method"
 msgstr ""
 
-#: includes/functions.php:172
+#: includes/functions.php:178
 msgid "Size"
 msgstr ""
 
-#: includes/functions.php:176
+#: includes/functions.php:182
 msgid "Package Number"
 msgstr ""
 
-#: includes/functions.php:181
+#: includes/functions.php:188
+msgid "Cost incl. tax"
+msgstr ""
+
+#: includes/functions.php:194
+msgid "Cost excl. tax"
+msgstr ""
+
+#: includes/functions.php:201
 msgid "Tracking Sent"
 msgstr ""
 
-#: includes/functions.php:184
+#: includes/functions.php:204
 msgid "Send Tracking Email"
 msgstr ""
 
-#: includes/functions.php:186
+#: includes/functions.php:206
 msgid "Delete Shipment"
 msgstr ""
 
-#: includes/functions.php:188 includes/functions.php:913
+#: includes/functions.php:208 includes/functions.php:941
 msgid "Download Label"
 msgstr ""
 
-#: includes/functions.php:190 includes/functions.php:915
+#: includes/functions.php:210 includes/functions.php:943
 msgid "Show Label"
 msgstr ""
 
-#: includes/functions.php:191
+#: includes/functions.php:211
 msgid "Print Label"
 msgstr ""
 
-#: includes/functions.php:213
+#: includes/functions.php:233
 msgid "Tracking email sent"
 msgstr ""
 
-#: includes/functions.php:219
+#: includes/functions.php:239
 msgid "Failed to send tracking email"
 msgstr ""
 
-#: includes/functions.php:226
+#: includes/functions.php:246
 msgid ""
 "Do you wish to remove the shipment from this order?\\nCannot be undone!"
 "\\nDoes not cancel the shipment!"
 msgstr ""
 
-#: includes/functions.php:235
+#: includes/functions.php:255
 msgid "Shipment removed"
 msgstr ""
 
-#: includes/functions.php:240
+#: includes/functions.php:260
 msgid "Failed to remove shipment"
 msgstr ""
 
-#: includes/functions.php:258
+#: includes/functions.php:278
 msgid "Box Size"
 msgstr ""
 
-#: includes/functions.php:274 pages/box-sizes.php:79
+#: includes/functions.php:294 pages/box-sizes.php:79
 msgid "Height (cm)"
 msgstr ""
 
-#: includes/functions.php:278 pages/box-sizes.php:80
+#: includes/functions.php:298 pages/box-sizes.php:80
 msgid "Width (cm)"
 msgstr ""
 
-#: includes/functions.php:282 pages/box-sizes.php:81
+#: includes/functions.php:302 pages/box-sizes.php:81
 msgid "Length (cm)"
 msgstr ""
 
-#: includes/functions.php:286
+#: includes/functions.php:306
 msgid "Weight (g)"
 msgstr ""
 
-#: includes/functions.php:290
+#: includes/functions.php:310
 msgid "Create Shipment"
 msgstr ""
 
-#: includes/functions.php:340
+#: includes/functions.php:360
 msgid "Shipment Created"
 msgstr ""
 
-#: includes/functions.php:342
+#: includes/functions.php:362
 msgid "Shipment Exists"
 msgstr ""
 
-#: includes/functions.php:371
+#: includes/functions.php:395
 msgid "Store phone and/or email not set"
 msgstr ""
 
-#: includes/functions.php:372
+#: includes/functions.php:396
 #, php-format
 msgid "Please set this in <a href=\"%s\">WooCommerce Settings</a>"
 msgstr ""
 
-#: includes/functions.php:392
+#: includes/functions.php:416
 msgid "CoolRunner could not retrieve information about your account."
 msgstr ""
 
-#: includes/functions.php:393
+#: includes/functions.php:417
 msgid "Please check your username and/or token:"
 msgstr ""
 
-#: includes/functions.php:424
+#: includes/functions.php:450
 msgid "Choose package shop"
 msgstr ""
 
-#: includes/functions.php:425
+#: includes/functions.php:451
 msgid "Choose where you want your package to be dropped off"
 msgstr ""
 
-#: includes/functions.php:428
+#: includes/functions.php:454
 msgid "Input Zip Code"
 msgstr ""
 
-#: includes/functions.php:436
+#: includes/functions.php:462
 msgid "Search for package shop"
 msgstr ""
 
-#: includes/functions.php:509
+#: includes/functions.php:535
 msgid "Distance"
 msgstr ""
 
-#: includes/functions.php:626
+#: includes/functions.php:652
 #, php-format
 msgid "Created shipment: %s"
 msgstr ""
 
-#: includes/functions.php:661
+#: includes/functions.php:687
 #, php-format
-msgid "Removed shipment: %s from order"
+msgid "Removed shipment: %s"
 msgstr ""
 
-#: includes/functions.php:720
+#: includes/functions.php:746
 #, php-format
 msgid "Tracking information sent to: %s"
 msgstr ""
 
-#: includes/functions.php:762
+#: includes/functions.php:788
 msgid "Phone"
 msgstr ""
 
-#: includes/functions.php:763
+#: includes/functions.php:789
 msgid "The phone number for your business location."
 msgstr ""
 
-#: includes/functions.php:770
+#: includes/functions.php:796
 msgid "Email"
 msgstr ""
 
-#: includes/functions.php:771
+#: includes/functions.php:797
 msgid "The email address for your business location."
 msgstr ""
 
-#: includes/functions.php:943
+#: includes/functions.php:971
 msgid "Please select your package shop."
 msgstr ""
 
-#: includes/functions.php:1004
+#: includes/functions.php:1032
 msgid "Unable to create or re-send email for order: "
+msgstr ""
+
+#: includes/functions.php:1078
+msgid "Sent all marked orders"
 msgstr ""
 
 #: pages/settings.php:32
@@ -230,27 +242,33 @@ msgstr ""
 msgid "Integration Token"
 msgstr ""
 
-#: pages/settings.php:66
+#: pages/settings.php:62 pages/settings.php:76
 msgid "Label Format"
 msgstr ""
 
-#: pages/settings.php:80
+#: pages/settings.php:85
+msgid ""
+"Weight unit used by WooCommerce (used for automatic conversion of weight for "
+"shipments)"
+msgstr ""
+
+#: pages/settings.php:91
 msgid "Servicepoints"
 msgstr ""
 
-#: pages/settings.php:94
+#: pages/settings.php:105
 msgid "Enable Tracking Email"
 msgstr ""
 
-#: pages/settings.php:107
+#: pages/settings.php:118
 msgid "Debug Mode"
 msgstr ""
 
-#: pages/settings.php:121
+#: pages/settings.php:132
 msgid "Tracking"
 msgstr ""
 
-#: pages/settings.php:127
+#: pages/settings.php:138
 msgid "Tracking email"
 msgstr ""
 
