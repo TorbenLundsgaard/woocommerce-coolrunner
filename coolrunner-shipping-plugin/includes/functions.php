@@ -48,7 +48,7 @@ add_action( 'wp_ajax_coolrunner_create_shipment_second', function () {
 
         update_post_meta( $order_id, '_coolrunner_package_size_second', $size );
 
-        $response = coolrunner_create_shipment_second( $order_id );
+        $response = coolrunner_create_shipment_second( $order_id, $size );
 
         $response['new_content'] = crship_get_metabox_content( $order_id );
 
@@ -150,6 +150,7 @@ add_action( 'add_meta_boxes', function () {
             $order_id       = $post->ID;
             $tracking_array = coolrunner_get_tracking_data( $order_id );
             $tracking_array_second = coolrunner_get_tracking_data_second( $order_id );
+
             if ( $tracking_array &&
                 isset( $tracking_array->tracking->history ) &&
                 count( $tracking_array->tracking->history ) > 0 ) {
@@ -158,7 +159,7 @@ add_action( 'add_meta_boxes', function () {
                 echo "<ul>";
                 foreach ( $history_array as $value ) {
                     echo '<li>';
-                    echo "<div><strong>Time : </strong>$value->time</div>";
+                    echo "<div><strong>Time (Pakke: ".$tracking_array->package_number.") : </strong>$value->time</div>";
                     echo "<div><strong>Message : </strong>$value->message</div>";
                     echo '</li>';
                 }
@@ -169,23 +170,23 @@ add_action( 'add_meta_boxes', function () {
                 <?php
             }
 
-            if ( $tracking_array_second &&
-                isset( $tracking_array_second->tracking->history ) &&
-                count( $tracking_array_second->tracking->history ) > 0 ) {
-                echo "<p><strong>Status : </strong>" . $tracking_array_second->tracking->status->header . "</p>";
-                $history_array = $tracking_array_second->tracking->history;
-                echo "<ul>";
-                foreach ( $history_array as $value ) {
-                    echo '<li>';
-                    echo "<div><strong>Time : </strong>$value->time</div>";
-                    echo "<div><strong>Message : </strong>$value->message</div>";
-                    echo '</li>';
+            error_log('tracking: ' . print_r($tracking_array_second, 1));
+
+            if ( $tracking_array_second ) {
+                foreach ($tracking_array_second as $package_number => $singleTracking) {
+                    if($singleTracking->tracking->status->header != '') {
+                        echo "<p><strong>Status : </strong>" . $singleTracking->tracking->status->header . "</p>";
+                        $history_array = $singleTracking->tracking->history;
+                        echo "<ul>";
+                        foreach ($history_array as $value) {
+                            echo '<li>';
+                            echo "<div><strong>Time (Pakke: " . $package_number . "): </strong>$value->time</div>";
+                            echo "<div><strong>Message : </strong>$value->message</div>";
+                            echo '</li>';
+                        }
+                        echo "</ul>";
+                    }
                 }
-                echo "</ul>";
-            } else {
-                ?>
-                <p><?php echo __( 'No second tracking data available for order no.', 'coolrunner-shipping-plugin' ) ?><?php echo $post->ID ?></p>
-                <?php
             }
         }
     }, 'shop_order', 'side', 'core' );
@@ -196,7 +197,7 @@ function crship_get_metabox_content( $id = null ) {
     $post_id      = $id ? $id : $post->ID;
     $order        = wc_get_order( $id ? $id : $post->ID );
     $has_shipping = get_post_meta( $id ? $id : $post->ID, '_coolrunner_package_number', true );
-    $has_shipping_second = get_post_meta( $id ? $id : $post->ID, '_coolrunner_package_number_second', true );
+    $has_shipping_second = get_post_meta( $id ? $id : $post->ID, '_coolrunner_multiple_shipments', true );
 
     ob_start();
 
@@ -264,8 +265,7 @@ function crship_get_metabox_content( $id = null ) {
             <button id="coolrunner_delete_shipment" type="button" class="button button-danger"><?php echo __( 'Delete Shipment', 'coolrunner-shipping-plugin' ) ?></button>
             <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?download=1&order_id=' . $post_id ?>"
                     id="coolrunner_download_label" type="button" class="button"><?php echo __( 'Download Label', 'coolrunner-shipping-plugin' ) ?></button>
-            <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?order_id=' . $post_id ?>"
-                    id="coolrunner_show_label" type="button" class="button"><?php echo __( 'Show Label', 'coolrunner-shipping-plugin' ) ?></button>
+        <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?order_id=' . $post_id ?> id="coolrunner_show_label" type="button" class="button"><?php echo __( 'Show Label', 'coolrunner-shipping-plugin' ) ?></button>
             <button id="coolrunner_print_label" type="button" class="button"><?php echo __( 'Print Label', 'coolrunner-shipping-plugin' ) ?></button>
             <iframe style="display: none;" src="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?order_id=' . $post_id ?>"></iframe>
             <script>
@@ -331,149 +331,123 @@ function crship_get_metabox_content( $id = null ) {
                 });
             </script>
             <!-- ANOTHER SHIPMENT -->
+            <div class="anothershipment" style="border-top: 3px solid #f1f1f1;">
+                <h3 style="margin-bottom: 0px;">Yderligere pakker:</h3><br>
+                <label for="coolrunner_height_second">
+                    <?php echo __( 'Height (cm)', 'coolrunner-shipping-plugin' ) ?>:
+                </label>
+                <input type="number" name="coolrunner_height_second" min="1" id="coolrunner_height_second" value="<?php echo $primary['height'] ?>">
+                <label for="coolrunner_width_second">
+                    <?php echo __( 'Width (cm)', 'coolrunner-shipping-plugin' ) ?>:
+                </label>
+                <input type="number" name="coolrunner_width_second" min="1" id="coolrunner_width_second" value="<?php echo $primary['width'] ?>">
+                <label for="coolrunner_length_second">
+                    <?php echo __( 'Length (cm)', 'coolrunner-shipping-plugin' ) ?>:
+                </label>
+                <input type="number" name="coolrunner_length_second" min="1" id="coolrunner_length_second" value="<?php echo $primary['length'] ?>">
+                <label for="coolrunner_weight_second">
+                    <?php echo __( 'Weight (g)', 'coolrunner-shipping-plugin' ) ?>:
+                </label>
+                <input type="number" name="coolrunner_weight_second" min="0" step="0.01" id="coolrunner_weight_second" value="<?php echo $weight * 1000 ?>">
+                <button id="coolrunner_create_second" class="button button-primary" type="button" style="width: 100%;">
+                    <?php echo __( 'Create Shipment', 'coolrunner-shipping-plugin' ) ?>
+                </button>
+                <script>
+                    jQuery(function ($) {
+                        let crmeta = $('#coolrunner-meta-box'),
+                            inputsSecond = crmeta.find('select[name], input[name]'),
+                            createBtnSecond = crmeta.find('#coolrunner_create_second'),
+                            sizeSelectSecond = crmeta.find('select');
 
-        <?php if(!$has_shipping_second): ?>
-            <label for="coolrunner_height_second">
-                <?php echo __( 'Height (cm)', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="number" name="coolrunner_height_second" min="1" id="coolrunner_height_second" value="<?php echo $primary['height'] ?>">
-            <label for="coolrunner_width_second">
-                <?php echo __( 'Width (cm)', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="number" name="coolrunner_width_second" min="1" id="coolrunner_width_second" value="<?php echo $primary['width'] ?>">
-            <label for="coolrunner_length_second">
-                <?php echo __( 'Length (cm)', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="number" name="coolrunner_length_second" min="1" id="coolrunner_length_second" value="<?php echo $primary['length'] ?>">
-            <label for="coolrunner_weight_second">
-                <?php echo __( 'Weight (g)', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="number" name="coolrunner_weight_second" min="0" step="0.01" id="coolrunner_weight_second" value="<?php echo $weight * 1000 ?>">
-            <button id="coolrunner_create_second" class="button button-primary" type="button" style="width: 100%;">
-                <?php echo __( 'Create Shipment', 'coolrunner-shipping-plugin' ) ?>
-            </button>
-            <script>
-                jQuery(function ($) {
-                    let crmeta = $('#coolrunner-meta-box'),
-                        inputsSecond = crmeta.find('select[name], input[name]'),
-                        createBtnSecond = crmeta.find('#coolrunner_create_second'),
-                        sizeSelectSecond = crmeta.find('select');
+                        sizeSelectSecond.on('change input', function () {
+                            let option = $(this).find(':selected'),
+                                props = ['height_second', 'length_second', 'width_second'];
 
-                    sizeSelectSecond.on('change input', function () {
-                        let option = $(this).find(':selected'),
-                            props = ['height_second', 'length_second', 'width_second'];
-
-                        props.forEach(function (e) {
-                            // console.log(e);
-                            crmeta.find('[name=coolrunner_' + e + ']').val(option.attr('data-' + e));
-                        })
-                    });
-
-                    createBtnSecond.on('click', function () {
-                        if (confirm('Vil du oprette forsendelse på denne ordre?')) {
-                            let data = {
-                                action: 'coolrunner_create_shipment_second',
-                                order_id: '<?php echo $post_id ?>',
-                                height_second: $("#coolrunner_height_second").val(),
-                                width_second: $("#coolrunner_width_second").val(),
-                                length_second: $("#coolrunner_length_second").val(),
-                                weight_second: $("#coolrunner_weight_second").val()
-                            };
-
-                            $('#coolrunner-meta-overlay').fadeIn();
-
-                            $.ajax({
-                                method: 'post',
-                                url: ajaxurl,
-                                data: data,
-                                success: function (data) {
-                                    if (data.created && data.exists) {
-                                        alert('<?php echo __( 'Shipment Created', 'coolrunner-shipping-plugin' ) ?>');
-                                    } else if (!data.created && data.exists) {
-                                        alert('<?php echo __( 'Shipment Exists', 'coolrunner-shipping-plugin' ) ?>');
-                                    } else {
-                                        alert('errors:' + data.errors);
-                                    }
-                                    crmeta.find('.inside').html(data.new_content);
-
-                                    $('#coolrunner-meta-overlay').fadeOut();
-                                },
-                                error: function (data) {
-                                    console.log(data);
-                                    alert('failed' + data);
-                                    $('#coolrunner-meta-overlay').fadeOut();
-                                }
+                            props.forEach(function (e) {
+                                // console.log(e);
+                                crmeta.find('[name=coolrunner_' + e + ']').val(option.attr('data-' + e));
                             })
-                        }
-                    });
-                })
-            </script>
-        <?php else: ?>
-            <b><?php echo __('Package number 2:', 'coolrunner-shipping-plugin'); ?></b><br>
-        <?php $sizesecond = $order->get_meta( '_coolrunner_package_size_second' ) ?>
-            <label>
-                <?php echo __( 'Shipping Method', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="text" disabled value="<?php echo $order->get_shipping_method() ?>">
-            <label>
-                <?php echo __( 'Size', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="text" disabled value="<?php printf( '%s x %s x %s | %skg', $sizesecond['height'], $sizesecond['width'], $sizesecond['length'], number_format( $sizesecond['weight'] / 1000, 2 ) ) ?>">
-            <label>
-                <?php echo __( 'Package Number', 'coolrunner-shipping-plugin' ) ?>:
-            </label>
-        <input type="text" disabled value="<?php echo $order->get_meta( '_coolrunner_package_number_second' ) ?>">
-            <div class="row">
-                <div class="column">
-                    <label>
-                        <?php echo __( 'Cost incl. tax', 'coolrunner-shipping-plugin' ) ?>:
-                    </label>
-                    <input type="text" disabled value="DKK<?php echo number_format( floatval( $order->get_meta( '_coolrunner_price_incl_tax_second' ) ), 2 ) ?>">
-                </div>
-                <div class="column">
-                    <label>
-                        <?php echo __( 'Cost excl. tax', 'coolrunner-shipping-plugin' ) ?>:
-                    </label>
-                    <input type="text" disabled value="DKK<?php echo number_format( floatval( $order->get_meta( '_coolrunner_price_excl_tax_second' ) ), 2 ) ?>">
-                </div>
+                        });
+
+                        createBtnSecond.on('click', function () {
+                            if (confirm('Vil du oprette forsendelse på denne ordre?')) {
+                                let data = {
+                                    action: 'coolrunner_create_shipment_second',
+                                    order_id: '<?php echo $post_id ?>',
+                                    height_second: $("#coolrunner_height_second").val(),
+                                    width_second: $("#coolrunner_width_second").val(),
+                                    length_second: $("#coolrunner_length_second").val(),
+                                    weight_second: $("#coolrunner_weight_second").val()
+                                };
+
+                                $('#coolrunner-meta-overlay').fadeIn();
+
+                                $.ajax({
+                                    method: 'post',
+                                    url: ajaxurl,
+                                    data: data,
+                                    success: function (data) {
+                                        if (data.created) {
+                                            alert('<?php echo __( 'Shipment Created', 'coolrunner-shipping-plugin' ) ?>');
+                                        } else if (!data.created && data.exists) {
+                                            alert('<?php echo __( 'Shipment Exists', 'coolrunner-shipping-plugin' ) ?>');
+                                        } else {
+                                            alert('errors:' + data.errors);
+                                        }
+                                        crmeta.find('.inside').html(data.new_content);
+
+                                        $('#coolrunner-meta-overlay').fadeOut();
+                                    },
+                                    error: function (data) {
+                                        console.log(data);
+                                        alert('failed' + data);
+                                        $('#coolrunner-meta-overlay').fadeOut();
+                                    }
+                                })
+                            }
+                        });
+                    })
+                </script>
+                <?php if($has_shipping_second): ?>
+                    <?php $multipleShipments = get_post_meta($id ? $id : $post->ID, '_coolrunner_multiple_shipments', true); ?>
+                    <?php $multipleShipments = json_decode($multipleShipments); ?>
+                    <?php foreach ($multipleShipments as $multipleShipment): ?>
+                        <?php $size = $multipleShipment->size; ?>
+                        <div style="border-top: 3px solid #f1f1f1; margin-top: 10px; padding-top: 10px;">
+                            <label>
+                                <?php echo __( 'Shipping Method', 'coolrunner-shipping-plugin' ) ?>:
+                            </label>
+                            <input type="text" disabled value="<?php echo $order->get_shipping_method() ?>">
+
+                            <label>
+                                <?php echo __( 'Size', 'coolrunner-shipping-plugin' ) ?>:
+                            </label>
+                            <input type="text" disabled value="<?php printf( '%s x %s x %s | %skg', $size->height, $size->width, $size->length, number_format( $size->weight / 1000, 2 ) ) ?>">
+
+                            <label>
+                                <?php echo __( 'Package Number', 'coolrunner-shipping-plugin' ) ?>:
+                            </label>
+                            <input type="text" disabled value="<?php echo $multipleShipment->package_number; ?>">
+                            <div class="row">
+                                <div class="column">
+                                    <label>
+                                        <?php echo __( 'Cost incl. tax', 'coolrunner-shipping-plugin' ) ?>:
+                                    </label>
+                                    <input type="text" disabled value="DKK <?php echo $multipleShipment->price_incl_tax; ?>">
+                                </div>
+                                <div class="column">
+                                    <label>
+                                        <?php echo __( 'Cost excl. tax', 'coolrunner-shipping-plugin' ) ?>:
+                                    </label>
+                                    <input type="text" disabled value="DKK <?php echo $multipleShipment->price_excl_tax; ?>">
+                                </div>
+                            </div>
+                            <?php $orderId = $id ? $id : $post->ID; ?>
+                            <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?multiple=1&package_number=' . $multipleShipment->package_number . "&order_id=" . $orderId; ?>" id="coolrunner_show_label" type="button" class="button"><?php echo __( 'Show Label', 'coolrunner-shipping-plugin' ) ?></button>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
-            <button id="coolrunner_delete_shipment_second" type="button" class="button button-danger"><?php echo __( 'Delete Shipment', 'coolrunner-shipping-plugin' ) ?></button>
-            <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?download=1&second=1&order_id=' . $post_id ?>" id="coolrunner_download_label_second" type="button" class="button"><?php echo __( 'Download Label', 'coolrunner-shipping-plugin' ) ?></button>
-            <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?second=1&order_id=' . $post_id ?>" id="coolrunner_show_label_second" type="button" class="button"><?php echo __( 'Show Label', 'coolrunner-shipping-plugin' ) ?></button>
-            <script>
-                jQuery(function ($) {
-                    let crmeta = $('#coolrunner-meta-box'),
-                        deleteBtnSecond = crmeta.find('#coolrunner_delete_shipment_second'),
-                        labelBtnsSecond = crmeta.find('#coolrunner_download_label_second, #coolrunner_show_label_second');
-
-                    deleteBtnSecond.on('click', function () {
-                        if (confirm('<?php echo __( 'Do you wish to remove the shipment from this order?\nCannot be undone!\nDoes not cancel the shipment!', 'coolrunner-shipping-plugin' ) ?>')) {
-                            $.ajax({
-                                method: 'post',
-                                url: ajaxurl,
-                                data: {
-                                    action: 'coolrunner_delete_shipment_second',
-                                    order_id: '<?php echo $post_id ?>'
-                                },
-                                success: function (data) {
-                                    alert('<?php echo __( 'Shipment removed', 'coolrunner-shipping-plugin' ) ?>');
-                                    crmeta.find('.inside').html(data.new_content);
-                                },
-                                error: function (data) {
-                                    console.log(data);
-                                    alert('<?php echo __( 'Failed to remove shipment', 'coolrunner-shipping-plugin' ) ?>');
-                                }
-                            });
-                        }
-                    });
-
-                    labelBtnsSecond.on('click', function () {
-                        window.open($(this).attr('data-href'));
-                    });
-                });
-            </script>
-
-        <?php endif; ?>
             <!-- ANOTHER SHIPMENT END -->
         <?php else : ?>
             <?php if ( ! empty( CoolRunner::getBoxSizes() ) ) : ?>
@@ -861,8 +835,7 @@ function coolrunner_create_shipment( $post_id = null ) {
             'new_content' => $content,
             'errors'      => implode( "\n", $errors )
         );
-        //	$data = $tracking_array;
-        //	echo $data->package_number;
+
         if ( ! $post_id ) {
             header( 'Content-Type: application/json' );
             echo json_encode( $return );
@@ -870,9 +843,6 @@ function coolrunner_create_shipment( $post_id = null ) {
         } else {
             return $return;
         }
-
-        //Returner korrekt værdi udfra respons kode
-        //echo $response['http_code'];
 
 
     } else {
@@ -882,7 +852,7 @@ function coolrunner_create_shipment( $post_id = null ) {
     exit; // just to be safe
 }
 
-function coolrunner_create_shipment_second( $post_id = null ) {
+function coolrunner_create_shipment_second( $post_id = null, $size ) {
 
     error_log('runned coolrunner_create_shipment_second');
 
@@ -897,34 +867,46 @@ function coolrunner_create_shipment_second( $post_id = null ) {
         $created = false;
         $errors  = [];
 
-        if ( ! get_post_meta( $order->get_id(), '_coolrunner_package_number_second', true ) ) {
-            $curldata = create_shipment_array_second( $order );
+        $curldata = create_shipment_array_second( $order, $size );
 
-            if ( ! $curldata ) {
-                return;
-            }
-
-            $curl = new CR_Curl();
-
-            $response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $recieve_responsecode = false, $json = true );
-
-            if ($response->result->status == 'ok' || $response->status == 'ok') {
-                update_post_meta( $order_id, '_coolrunner_package_number_second', $response->result->package_number );
-                update_post_meta( $order_id, '_coolrunner_pdf_link_second', $response->result->pdf_link );
-                update_post_meta( $order_id, '_coolrunner_price_incl_tax_second', $response->result->price_incl_tax );
-                update_post_meta( $order_id, '_coolrunner_price_excl_tax_second', $response->result->price_excl_tax );
-                update_post_meta( $order_id, '_coolrunner_pdf_second', $response->result->pdf_base64 );
-            } else {
-                if ( isset( $response->result->message ) ) {
-                    $errors = $response->result->message;
-                } else {
-                    $errors[] = $response->result->emessage;
-                }
-            }
-
-
-            $created = isset($response) && ($response->result->status === 'ok' || $response->status == 'ok');
+        if ( ! $curldata ) {
+            return;
         }
+
+        $curl = new CR_Curl();
+
+        $response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $recieve_responsecode = false, $json = true );
+
+        error_log('response: ' . print_r($response, 1));
+
+        if ($response->result->status == 'ok' || $response->status == 'ok') {
+            if(!empty(get_post_meta($order->get_id(), '_coolrunner_multiple_shipments', true))) {
+                $shipments = json_decode(get_post_meta($order->get_id(), '_coolrunner_multiple_shipments', true));
+            } else {
+                $shipments = array();
+            }
+
+            $shipments[] = array(
+                "package_number" => $response->result->package_number,
+                "pdf_link" => $response->result->pdf_link,
+                "price_incl_tax" => $response->result->price_incl_tax,
+                "price_excl_tax" => $response->result->price_excl_tax,
+                "pdf_base64" => $response->result->pdf_base64,
+                "size" => $size
+            );
+
+            update_post_meta( $order_id, '_coolrunner_multiple_shipments', json_encode($shipments) );
+        } else {
+            if ( isset( $response->result->message ) ) {
+                $errors = $response->result->message;
+            } else {
+                $errors[] = $response->result->emessage;
+            }
+        }
+
+
+        $created = isset($response) && ($response->result->status === 'ok' || $response->status == 'ok');
+
 
         $content = crship_get_metabox_content( $order_id );
 
@@ -933,14 +915,15 @@ function coolrunner_create_shipment_second( $post_id = null ) {
             $order->add_order_note( sprintf( __( 'Created shipment: %s', 'coolrunner-shipping-plugin' ), $response->result->package_number ) );
         }
 
+        error_log('created: ' . $created);
+
         $return = array(
             'created'     => $created,
-            'exists'      => ! ! get_post_meta( $order->get_id(), '_coolrunner_package_number_second', true ),
+            'exists'      => 0,
             'new_content' => $content,
             'errors'      => implode( "\n", $errors )
         );
-        //	$data = $tracking_array;
-        //	echo $data->package_number;
+
         if ( ! $post_id ) {
             header( 'Content-Type: application/json' );
             echo json_encode( $return );
@@ -948,11 +931,6 @@ function coolrunner_create_shipment_second( $post_id = null ) {
         } else {
             return $return;
         }
-
-        //Returner korrekt værdi udfra respons kode
-        //echo $response['http_code'];
-
-
     } else {
         echo "ID was not found";
     }
@@ -1076,24 +1054,22 @@ function coolrunner_get_tracking_data( $order_id ) {
 
 function coolrunner_get_tracking_data_second( $order_id ) {
 
+    if (!empty( $order_id) ) {
+        $tracking = array();
+        $shipments = json_decode(get_post_meta( $order_id, '_coolrunner_multiple_shipments', true ));
 
-    if ( ! empty( $order_id ) ) {
-
-        //	$destination = get_post_meta($order_id,'coolrunner_pdf_link', true );
-
-        $package_number = get_post_meta( $order_id, '_coolrunner_package_number_second', true );
-        if ( $package_number ) {
+        foreach ($shipments as $shipment) {
+            $package_number = $shipment->package_number;
             $destination = "v1/tracking/" . $package_number;
-
             $curldata = array();
-            $curl     = new CR_Curl();
+            $curl = new CR_Curl();
 
-            $response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $recieve_responsecode = false, $json = true );
+            $response = $curl->sendCurl($destination, get_option('coolrunner_integration_username'), get_option('coolrunner_integration_token'), $curldata, $recieve_responsecode = false, $json = true);
 
-            return $response;
-        } else {
-            return null;
+            $tracking[$package_number] = $response;
         }
+
+        return $tracking;
     }
 
 }
@@ -1224,15 +1200,11 @@ function create_shipment_array( $order ) {
     return false;
 }
 
-function create_shipment_array_second( $order ) {
+function create_shipment_array_second( $order, $size ) {
 
     //$dp = ( isset( $filter['dp'] ) ? intval( $filter['dp'] ) : 2 );
     $order_post = get_post( $order->get_id() );
 
-
-    //$chosen_methods = WC()->customer->get( 'chosen_shipping_methods' );
-    //$chosen_methods = $order->get_items( 'shipping' );
-    //$chosen_shipping = $chosen_methods[0];
     $shipping_items = $order->get_items( 'shipping' );
     $key            = array_keys( $shipping_items );
 
@@ -1262,8 +1234,6 @@ function create_shipment_array_second( $order ) {
             $drop_city    = '';
             $drop_country = '';
         }
-
-        $size = get_post_meta( $order->get_id(), '_coolrunner_package_size_second', true );
 
         error_log('sizes array: ' . print_r($size, 1));
 
@@ -1308,8 +1278,6 @@ function create_shipment_array_second( $order ) {
             'droppoint_city'        => $drop_city,
             'droppoint_country'     => $drop_country
         );
-
-        error_log(print_r($array, 1));
 
         return $array;
     }
