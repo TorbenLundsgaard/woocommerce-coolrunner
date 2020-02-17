@@ -149,6 +149,7 @@ add_action( 'add_meta_boxes', function () {
         if ( $config_name ) {
             $order_id       = $post->ID;
             $tracking_array = coolrunner_get_tracking_data( $order_id );
+            $tracking_array_second = coolrunner_get_tracking_data_second( $order_id );
             if ( $tracking_array &&
                 isset( $tracking_array->tracking->history ) &&
                 count( $tracking_array->tracking->history ) > 0 ) {
@@ -165,6 +166,25 @@ add_action( 'add_meta_boxes', function () {
             } else {
                 ?>
                 <p><?php echo __( 'No tracking data available for order no.', 'coolrunner-shipping-plugin' ) ?><?php echo $post->ID ?></p>
+                <?php
+            }
+
+            if ( $tracking_array_second &&
+                isset( $tracking_array_second->tracking->history ) &&
+                count( $tracking_array_second->tracking->history ) > 0 ) {
+                echo "<p><strong>Status : </strong>" . $tracking_array_second->tracking->status->header . "</p>";
+                $history_array = $tracking_array_second->tracking->history;
+                echo "<ul>";
+                foreach ( $history_array as $value ) {
+                    echo '<li>';
+                    echo "<div><strong>Time : </strong>$value->time</div>";
+                    echo "<div><strong>Message : </strong>$value->message</div>";
+                    echo '</li>';
+                }
+                echo "</ul>";
+            } else {
+                ?>
+                <p><?php echo __( 'No second tracking data available for order no.', 'coolrunner-shipping-plugin' ) ?><?php echo $post->ID ?></p>
                 <?php
             }
         }
@@ -1038,6 +1058,30 @@ function coolrunner_get_tracking_data( $order_id ) {
         //	$destination = get_post_meta($order_id,'coolrunner_pdf_link', true );
 
         $package_number = get_post_meta( $order_id, '_coolrunner_package_number', true );
+        if ( $package_number ) {
+            $destination = "v1/tracking/" . $package_number;
+
+            $curldata = array();
+            $curl     = new CR_Curl();
+
+            $response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $recieve_responsecode = false, $json = true );
+
+            return $response;
+        } else {
+            return null;
+        }
+    }
+
+}
+
+function coolrunner_get_tracking_data_second( $order_id ) {
+
+
+    if ( ! empty( $order_id ) ) {
+
+        //	$destination = get_post_meta($order_id,'coolrunner_pdf_link', true );
+
+        $package_number = get_post_meta( $order_id, '_coolrunner_package_number_second', true );
         if ( $package_number ) {
             $destination = "v1/tracking/" . $package_number;
 
