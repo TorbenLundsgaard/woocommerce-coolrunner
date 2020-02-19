@@ -15,7 +15,9 @@ add_action( 'admin_menu', function () {
 } );
 
 add_action( 'wp_ajax_coolrunner_create_shipment', function () {
+    error_log('ran wp_ajax');
     if ( isset( $_POST['order_id'] ) && $order_id = $_POST['order_id'] ) {
+        error_log('ran wp_ajax with id');
         $size = [
             'height' => $_POST['height'],
             'width'  => $_POST['width'],
@@ -25,7 +27,7 @@ add_action( 'wp_ajax_coolrunner_create_shipment', function () {
 
         update_post_meta( $order_id, '_coolrunner_package_size', $size );
 
-        $response = coolrunner_create_shipment( $order_id );
+        $response = coolrunner_create_shipment( $order_id , $size );
 
         $response['new_content'] = crship_get_metabox_content( $order_id );
 
@@ -115,7 +117,7 @@ add_action( 'add_meta_boxes', function () {
 
     $order = wc_get_order( $post->ID );
 
-    $is_coolrunner = false;
+    $is_coolrunner = true;
     foreach ( $order->get_shipping_methods() as $method ) {
         if ( $method->get_method_id() === 'coolrunner' ) {
             $is_coolrunner = true;
@@ -169,8 +171,6 @@ add_action( 'add_meta_boxes', function () {
                 <p><?php echo __( 'No tracking data available for order no.', 'coolrunner-shipping-plugin' ) ?><?php echo $post->ID ?></p>
                 <?php
             }
-
-            error_log('tracking: ' . print_r($tracking_array_second, 1));
 
             if ( $tracking_array_second ) {
                 foreach ($tracking_array_second as $package_number => $singleTracking) {
@@ -450,6 +450,7 @@ function crship_get_metabox_content( $id = null ) {
             </div>
             <!-- ANOTHER SHIPMENT END -->
         <?php else : ?>
+            <?php //echo 'Debug: '; print_r(create_shipment_array($order, array("height" => 15, "width" => 15, "length" => 15, "weight" => 1000))); ?>
             <?php if ( ! empty( CoolRunner::getBoxSizes() ) ) : ?>
             <label for="coolrunner_box_size">
                 <?php echo __( 'Box Size', 'coolrunner-shipping-plugin' ) ?>:
@@ -538,14 +539,16 @@ function crship_get_metabox_content( $id = null ) {
                                     } else if (!data.created && data.exists) {
                                         alert('<?php echo __( 'Shipment Exists', 'coolrunner-shipping-plugin' ) ?>');
                                     } else {
-                                        alert(data.errors);
+                                        alert('data errors' + data.errors);
+                                        console.log(data);
                                     }
                                     crmeta.find('.inside').html(data.new_content);
 
                                     $('#coolrunner-meta-overlay').fadeOut();
                                 },
                                 error: function (data) {
-                                    alert(data);
+                                    alert('data' + data);
+                                    console.log(data);
                                     $('#coolrunner-meta-overlay').fadeOut();
                                 }
                             })
@@ -722,7 +725,6 @@ function crship_coolrunner_droppoint_search() {
 
         echo implode( $radios );
     } else {
-        echo print_r( $response, true );
         echo "No Droppoints were found";
     }
     exit();
@@ -780,9 +782,11 @@ function coolrunner_ajax_resend_pdf_script() {
 
 add_action( 'admin_footer', 'coolrunner_ajax_resend_pdf_script' );
 
-function coolrunner_create_shipment( $post_id = null ) {
+function coolrunner_create_shipment( $post_id = null, $size = null ) {
 
     if ( ! empty( $_POST['id'] ) || ! is_null( $post_id ) ) {
+
+        error_log('ran coolrunner_create_shipment');
 
         $order_id = $post_id ? $post_id : $_POST['id'];
 
@@ -794,7 +798,7 @@ function coolrunner_create_shipment( $post_id = null ) {
         $errors  = [];
 
         if ( ! get_post_meta( $order->get_id(), '_coolrunner_package_number', true ) ) {
-            $curldata = create_shipment_array( $order );
+            $curldata = create_shipment_array( $order, $size);
 
             if ( ! $curldata ) {
                 return;
@@ -876,8 +880,6 @@ function coolrunner_create_shipment_second( $post_id = null, $size ) {
         $curl = new CR_Curl();
 
         $response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $recieve_responsecode = false, $json = true );
-
-        error_log('response: ' . print_r($response, 1));
 
         if ($response->result->status == 'ok' || $response->status == 'ok') {
             if(!empty(get_post_meta($order->get_id(), '_coolrunner_multiple_shipments', true))) {
@@ -1111,29 +1113,76 @@ add_filter( 'woocommerce_general_settings', function ( $arr ) {
  *
  * @return array
  */
-function create_shipment_array( $order ) {
+function get_nearest_droppoint( $order ) {
+    $droppointPicked = array();
 
-    //$dp = ( isset( $filter['dp'] ) ? intval( $filter['dp'] ) : 2 );
-    $order_post = get_post( $order->get_id() );
+    $curl = new CR_Curl();
 
+    if(strpos($order->get_shipping_method(), 'DHL') !== false) {
+        $carrier = "dhl";
+    }
 
-    //$chosen_methods = WC()->customer->get( 'chosen_shipping_methods' );
-    //$chosen_methods = $order->get_items( 'shipping' );
-    //$chosen_shipping = $chosen_methods[0];
-    $shipping_items = $order->get_items( 'shipping' );
-    $key            = array_keys( $shipping_items );
+    $curldata = array(
+        "carrier"              => $carrier,
+        "country_code"         => $order->get_shipping_country(),//get_option('coolrunner_settings_sender_country'),
+        "zipcode"              => $order->get_shipping_postcode(),
+        "city"                 => $order->get_shipping_city(),
+        "street"               => $order->get_shipping_address_1(),
+        "number_of_droppoints" => 1
+    );
 
-    $chosen_shipping = $shipping_items[ $key[0] ]['method_id'];
-    $matches         = explode( '_', $chosen_shipping );
+    $destination = "v2/droppoints/";
 
-    $user_info      = get_userdata( 1 );
-    $add_order_note = get_post_meta( $order->get_id(), 'add_order_note', true );
+    $response = $curl->sendCurl( $destination, get_option( 'coolrunner_integration_username' ), get_option( 'coolrunner_integration_token' ), $curldata, $header_enabled = false, $json = false );
+    $response = json_decode( json_encode( $response ), true );
+
+    $radios = array();
+
+    if ( $response['status'] == "ok" && ! empty( $response['result'] ) ) {
+        $droppointPicked = array(
+            "id" =>$response['result'][0]['droppoint_id'],
+            "name" => $response['result'][0]['name'],
+            "address" => $response['result'][0]['address'],
+            "shipmentdata" => array(
+                "carrier" => $response['result'][0]['carrier'],
+                "product" => "private",
+                "service" => "droppoint"
+            )
+        );
+    }
+
+    return $droppointPicked;
+}
+
+/**
+ * @param WC_Order $order
+ *
+ * @return array
+ */
+function create_shipment_array( $order, $size = null ) {
+
+    $payment_method = $order->get_payment_method();
+    $shipping_method = CoolRunner::getCoolRunnerShippingMethod( $order->get_id() );
 
     $droppoint = get_post_meta( $order->get_id(), '_coolrunner_droppoint', true );
 
-    $shipping_method = CoolRunner::getCoolRunnerShippingMethod( $order->get_id() );
+    if($payment_method == 'kco' AND strpos($order->get_shipping_method(), 'DHL') !== false) {
+        if($droppoint == '' OR empty($droppoint)) {
+            $droppoint = get_nearest_droppoint($order);
+        }
+
+        $shipping_method = $droppoint['shipmentdata'];
+    }
+
+    $shipping_items = $order->get_items( 'shipping' );
+    $add_order_note = get_post_meta( $order->get_id(), 'add_order_note', true );
+    update_post_meta($order->get_id(), '_coolrunner_package_size', $size);
+
 
     if ( $shipping_method ) {
+
+
+
         if ( $droppoint ) {
             $drop_id      = $droppoint['id'];
             $drop_name    = $droppoint['name'];
@@ -1150,7 +1199,21 @@ function create_shipment_array( $order ) {
             $drop_country = '';
         }
 
-        $size = get_post_meta( $order->get_id(), '_coolrunner_package_size', true );
+
+        if(is_array($shipping_method)) {
+            $carrier = $shipping_method['carrier'];
+            $product = $shipping_method['product'];
+            $service = $shipping_method['service'];
+        } else {
+            $carrier = $shipping_method->getCarrier();
+            $product = $shipping_method->getProduct();
+            $service = $shipping_method->getService();
+        }
+
+
+        if(get_post_meta( $order->get_id(), '_coolrunner_package_size', true )) {
+            $size = get_post_meta( $order->get_id(), '_coolrunner_package_size', true );
+        }
 
         $array = array(
             'order_number'          => $order->get_order_number(),
@@ -1175,9 +1238,9 @@ function create_shipment_array( $order ) {
             "sender_country"        => get_option( 'woocommerce_default_country' ),
             "sender_phone"          => get_option( 'woocommerce_store_phone' ),
             "sender_email"          => get_option( 'woocommerce_store_email' ),
-            "carrier"               => $shipping_method->getCarrier(),
-            "carrier_product"       => $shipping_method->getProduct(),
-            "carrier_service"       => $shipping_method->getService(),
+            "carrier"               => $carrier,
+            "carrier_product"       => $product,
+            "carrier_service"       => $service,
             "length"                => $size['length'],
             "width"                 => $size['width'],
             "height"                => $size['height'],
@@ -1195,9 +1258,12 @@ function create_shipment_array( $order ) {
         );
 
         return $array;
+
     }
 
     return false;
+
+
 }
 
 function create_shipment_array_second( $order, $size ) {
@@ -1234,8 +1300,6 @@ function create_shipment_array_second( $order, $size ) {
             $drop_city    = '';
             $drop_country = '';
         }
-
-        error_log('sizes array: ' . print_r($size, 1));
 
         $array = array(
             'order_number'          => $order->get_order_number(),
@@ -1459,7 +1523,7 @@ function crship_custom_js_admin_footer() {
 // Adding bulk action to list
 add_filter( 'bulk_actions-edit-shop_order', 'bulk_action_sent_selected_orders', 20, 1 );
 function bulk_action_sent_selected_orders( $actions ) {
-    $actions['sent_all_orders'] = __( 'Sent all marked orders', 'coolrunner-shipping-plugin' );
+    $actions['sent_all_orders'] = __( 'CoolRunner: Sent all marked orders', 'coolrunner-shipping-plugin' );
     return $actions;
 }
 
@@ -1475,7 +1539,14 @@ function sent_handle_bulk_action_edit_shop_order( $redirect_to, $action, $post_i
         $order = wc_get_order( $post_id );
         $order_data = $order->get_data();
 
-        coolrunner_create_shipment($post_id);
+        $size = array(
+            "height" => 15,
+            "width" => 15,
+            "length" => 15,
+            "weight" => 1000
+        );
+
+        coolrunner_create_shipment($post_id, $size);
 
         $processed_ids[] = $post_id;
     }
@@ -1500,4 +1571,45 @@ function sent_bulk_action_admin_notice() {
             $count,
             'download_marked_orders'
         ) . '</p></div>', $count );
+}
+
+/*
+ * Bulk action to print all labels selected in multiaction
+ * Added by Kevin Hansen 19/2/2020
+ * */
+
+// Adding bulk action to print all orders
+add_filter( 'bulk_actions-edit-shop_order', 'bulk_action_print_selected_orders', 20, 1 );
+function bulk_action_print_selected_orders( $actions ) {
+    $actions['print_all_orders'] = __( 'CoolRunner: Print all marked orders', 'coolrunner-shipping-plugin' );
+    return $actions;
+}
+
+// Make the action from selected orders
+add_filter( 'handle_bulk_actions-edit-shop_order', 'print_handle_bulk_action_edit_shop_order', 10, 3 );
+function print_handle_bulk_action_edit_shop_order( $redirect_to, $action, $post_ids ) {
+    include 'vendor/autoload.php';
+
+    if ( $action !== 'print_all_orders' )
+        return $redirect_to; // Exit
+
+    $time = time();
+    $count = 0;
+    $pdf = new Clegginabox\PDFMerger\PDFMerger;
+
+    foreach ( $post_ids as $post_id ) {
+        $pdfBase64 = get_post_meta($post_id, '_coolrunner_pdf')[0];
+        $pdfBase64Decoded = base64_decode($pdfBase64);
+        $file = COOLRUNNER_PLUGIN_DIR . '/pdfs/' . $time . '-' . $count . '.pdf';
+
+        file_put_contents($file, $pdfBase64Decoded);
+
+        $pdf->addPDF($file);
+        $count++;
+
+    }
+
+    $merge = COOLRUNNER_PLUGIN_DIR . '/pdfs/' . $time . '-merge' . '.pdf';
+    $pdf->merge('browser', $merge, 'P');
+
 }
