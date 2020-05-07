@@ -1,5 +1,6 @@
 CoolRunner for WooCommerce
 ==========================
+Wordpress
 
 License: MIT
 
