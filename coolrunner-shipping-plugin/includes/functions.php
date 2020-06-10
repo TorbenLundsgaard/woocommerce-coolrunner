@@ -837,7 +837,7 @@ function coolrunner_create_shipment( $post_id = null, $size = null ) {
             'created'     => $created,
             'exists'      => ! ! get_post_meta( $order->get_id(), '_coolrunner_package_number', true ),
             'new_content' => $content,
-            'errors'      => implode( "\n", $errors ),
+            'errors'      => $errors,
             'curl_data'	  => $curldata,
             'response'	  => $response
         );
