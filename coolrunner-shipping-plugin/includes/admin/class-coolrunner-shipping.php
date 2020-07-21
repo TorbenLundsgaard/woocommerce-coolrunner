@@ -201,8 +201,6 @@ add_action( 'woocommerce_shipping_init', function () {
                     $size    = array_map( 'intval', explode( '_', $size, 2 ) );
                     $size[1] = $size[1] - 1;
 
-                    error_log('weight: ' . $weight . ' - size: ' . json_encode($size));
-
                     if ( $size[0] <= $weight && $size[1] >= $weight ) {
                         $chosen_service = floatval( $service );
                         break;
