@@ -265,7 +265,7 @@ function crship_get_metabox_content( $id = null ) {
             <button id="coolrunner_delete_shipment" type="button" class="button button-danger"><?php echo __( 'Delete Shipment', 'coolrunner-shipping-plugin' ) ?></button>
             <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?download=1&order_id=' . $post_id ?>"
                     id="coolrunner_download_label" type="button" class="button"><?php echo __( 'Download Label', 'coolrunner-shipping-plugin' ) ?></button>
-        <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?order_id=' . $post_id ?> id="coolrunner_show_label" type="button" class="button"><?php echo __( 'Show Label', 'coolrunner-shipping-plugin' ) ?></button>
+        <button data-href="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?order_id=' . $post_id ?>" id="coolrunner_show_label" type="button" class="button"><?php echo __( 'Show Label', 'coolrunner-shipping-plugin' ) ?></button>
             <button id="coolrunner_print_label" type="button" class="button"><?php echo __( 'Print Label', 'coolrunner-shipping-plugin' ) ?></button>
             <iframe style="display: none;" src="<?php echo COOLRUNNER_PLUGIN_URL . '/pdf.php?order_id=' . $post_id ?>"></iframe>
             <script>

@@ -19,6 +19,15 @@
     width : 100%;
 }
 
+ul#coolrunner-navigation {
+    background: white;
+    padding: 10px;
+    border: 1px solid #bdbdbd;
+    border-radius: 2px;
+    height: 18px;
+    box-shadow: 0px 0px 1px #00000047;
+}
+
 #coolrunner-email-preview {
     width            : 100%;
     border           : 1px solid #DDD;
@@ -34,20 +43,43 @@
     height : 200px;
 }
 
-.coolrunner {
+#coolrunner-meta-box .button-primary {
+    background: #3697d6;
+    border: 1px solid white;
+    border-radius: 0px !important;
+}
 
+#coolrunner-navigation a {
+    padding: 11px;
+    text-decoration: none;
+}
+
+#coolrunner-navigation a:hover {
+    background: #f1f1f1;
+}
+
+div#coolrunner-meta-box {
+    background: #3697d6;
+    border: 1px solid #3697d6;
+    color: white;
 }
 
 button#coolrunner_delete_shipment {
-    background-color: #dc3545 !important;
-    border: 1px solid #dc3545 !important;
+    background-color: #9c9292 !important;
+    border: 1px solid #9c9292 !important;
     color: white !important;
+    border-radius: 0px;
 }
 
 button#coolrunner_delete_shipment_second {
     background-color: #dc3545 !important;
     border: 1px solid #dc3545 !important;
     color: white !important;
+}
+
+#coolrunner-meta-box h2.hndle.ui-sortable-handle {
+    color: white;
+    border-bottom: 0px solid white;
 }
 
 .coolrunner .text-right {
@@ -122,15 +154,53 @@ button#coolrunner_delete_shipment_second {
 #coolrunner-meta-box label {
     font-weight   : bold;
     margin-bottom : 5px;
+    font-size: 12px;
 }
 
 #coolrunner-meta-box .inside button {
-    margin-bottom : 10px;
-    width         : 100%;
+    margin-bottom: 10px;
+    width: 100%;
+    background-image: url(http://wordpress-normal.local/wp-content/plugins/woocommerce_coolrunner_daofood/assets/images/coolrunner-logo.png);
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 3px;
+}
+
+#coolrunner-meta-box .toggle-indicator {
+    color: white;
+}
+
+.coolrunner select, .coolrunner input[type='number'] {
+    color: #636363;
+    background: white;
+    border-radius: 0px;
+    border: 1px solid white;
+    margin-top: 1px;
+    font-size: 13px;
+}
+
+.anothershipment h3 {
+    color: white !important;
+}
+
+.wp-core-ui .button, .wp-core-ui .button-secondary {
+    color: white !important;
+    border-color: #0071a1 !important;
+    background: #0071a1 !important;
+    vertical-align: top;
 }
 
 #coolrunner-meta-box .inside input:disabled {
-    color : #444;
+    color: #636363;
+    background: white;
+    border-radius: 0px;
+    border: 1px solid white;
+    margin-top: 1px;
+    font-size: 13px;
+}
+
+.coolrunner b:first-of-type {
+    font-size: 18px;
 }
 
 #coolrunner-meta-overlay {
