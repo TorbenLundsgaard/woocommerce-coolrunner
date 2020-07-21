@@ -348,7 +348,7 @@ function crship_get_metabox_content( $id = null ) {
                 <label for="coolrunner_weight_second">
                     <?php echo __( 'Weight (g)', 'coolrunner-shipping-plugin' ) ?>:
                 </label>
-                <input type="number" name="coolrunner_weight_second" min="0" step="0.01" id="coolrunner_weight_second" value="<?php echo $weight * 1000 ?>">
+                <input type="number" name="coolrunner_weight_second" min="0" step="0.01" id="coolrunner_weight_second" value="<?php echo $weight; ?>">
                 <button id="coolrunner_create_second" class="button button-primary" type="button" style="width: 100%;">
                     <?php echo __( 'Create Shipment', 'coolrunner-shipping-plugin' ) ?>
                 </button>
@@ -483,7 +483,7 @@ function crship_get_metabox_content( $id = null ) {
             <label for="coolrunner_weight">
                 <?php echo __( 'Weight (g)', 'coolrunner-shipping-plugin' ) ?>:
             </label>
-        <input type="number" name="coolrunner_weight" min="0" step="0.01" id="coolrunner_weight" value="<?php echo $weight * 1000 ?>">
+        <input type="number" name="coolrunner_weight" min="0" step="0.01" id="coolrunner_weight" value="<?php echo $weight; ?>">
             <button id="coolrunner_create" class="button button-primary" type="button" style="width: 100%;">
                 <?php echo __( 'Create Shipment', 'coolrunner-shipping-plugin' ) ?>
             </button>
