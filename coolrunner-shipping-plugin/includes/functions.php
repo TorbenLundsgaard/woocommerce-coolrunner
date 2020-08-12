@@ -831,6 +831,8 @@ function coolrunner_create_shipment( $post_id = null, $size = null ) {
 
         if ( $created ) {
             $order->add_order_note( sprintf( __( 'Created shipment: %s', 'coolrunner-shipping-plugin' ), $response->result->package_number ) );
+        } else {
+            $order->add_order_note('error: ' . json_encode($response), false, false);
         }
 
         $return = array(
