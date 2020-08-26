@@ -38,7 +38,12 @@ class CoolRunner {
             'posti'      => 'Posti',
             'dhl'        => 'DHL',
             'helthjem'   => 'Helt Hjem',
-            'bring'      => 'Bring'
+            'bring'      => 'Bring',
+            'dfm'        => 'Danske Fragtmænd',
+            'royalmail'  => 'Royal Mail',
+            'postnl'     => 'PostNL',
+            'mondialrelay' => 'Mondial Relay',
+            'colisprive' => 'Colis Privé'
 		);
 
 		return ! is_null( $key ) ? ( isset( $carriers[ $key ] ) ? $carriers[ $key ] : null ) : $carriers;
