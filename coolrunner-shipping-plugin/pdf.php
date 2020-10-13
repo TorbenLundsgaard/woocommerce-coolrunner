@@ -16,8 +16,6 @@ if ( ! isset( $_GET['order_id'] ) ) {
     die( 'missing parameter order_id' );
 }
 
-
-
 $order_id = $_GET['order_id'];
 $order    = wc_get_order( $order_id );
 if ( ! $order ) {
@@ -34,9 +32,23 @@ if(isset($_GET['second'])) {
 }
 $download       = isset( $_GET['download'] );
 
+if(isset($_GET['multiple'])) {
+    $package_number = $_GET['package_number'];
+
+    $multiple_labels = json_decode(get_post_meta( $order_id, '_coolrunner_multiple_shipments', true ));
+
+    foreach ($multiple_labels as $label) {
+        if($label->package_number == $package_number) {
+            $pdf = $label->pdf_base64;
+        }
+    }
+}
 
 if ( $download ) {
     header( "Content-Disposition: attachment; filename=$orderno-$package_number.pdf" );
 }
-header( 'Content-Type: application/pdf' );
-echo base64_decode( $pdf );
+
+header('Content-Type: application/pdf');
+echo base64_decode($pdf);
+
+
