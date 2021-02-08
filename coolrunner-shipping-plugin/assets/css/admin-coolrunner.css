@@ -183,13 +183,6 @@ button#coolrunner_delete_shipment_second {
     color: white !important;
 }
 
-.wp-core-ui .button, .wp-core-ui .button-secondary {
-    color: white !important;
-    border-color: #0071a1 !important;
-    background: #0071a1 !important;
-    vertical-align: top;
-}
-
 #coolrunner-meta-box .inside input:disabled {
     color: #636363;
     background: white;
