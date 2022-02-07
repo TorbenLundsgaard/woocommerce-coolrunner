@@ -864,7 +864,7 @@ function coolrunner_create_shipment( $post_id = null, $size = null ) {
     exit; // just to be safe
 }
 
-function coolrunner_create_shipment_second( $post_id = null, $size ) {
+function coolrunner_create_shipment_second( $post_id = null, $size = null ) {
 
     error_log('runned coolrunner_create_shipment_second');
 
