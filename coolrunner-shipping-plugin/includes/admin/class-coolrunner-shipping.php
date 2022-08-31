@@ -225,6 +225,8 @@ add_action( 'woocommerce_shipping_init', function () {
                 }
             }
 
+            $free_shipping = apply_filters('coolrunner_free_shipping', $free_shipping);
+
             if ( ( $chosen_service != - 1 && $chosen_service != null ) || $free_shipping ) {
                 if($free_shipping) {
                     $chosen_service = 0;
