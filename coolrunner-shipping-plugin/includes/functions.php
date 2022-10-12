@@ -205,7 +205,7 @@ function crship_get_metabox_content( $id = null ) {
     foreach ( $order->get_items() as $item ) {
         /** @var WC_Order_Item_Product */
         $prod = wc_get_product( $item->get_data()['product_id'] );
-        if ( ! $prod->is_virtual() && $prod->has_weight() ) {
+        if ( $prod && ! $prod->is_virtual() && $prod->has_weight() ) {
             $weight += ( $prod->get_weight() * $item->get_quantity() );
         }
     }
